@@ -1,88 +1,79 @@
-let gameseq=[];
-let userseq=[];
-let btn=["red","yellow","green","blue"];
-let h2=document.querySelector("h2");
-let started=false;
-let level=0;
+let gameseq = [];
+let userseq = [];
+let btnColors = ["red", "yellow", "green", "blue"];
+let h2 = document.querySelector("h2");
+let started = false;
+let level = 0;
 
-document.addEventListener("keypress", function(){
-    if(started==false){
-        console.log("game is stated");
-        started=true;
-        leveup();
+document.addEventListener("keypress", function () {
+    if (started == false) {
+        console.log("game is started");
+        started = true;
+        levelup();
     }
-})
+});
 
-function btnflash(){
-  btn.classList.add("flash");
-  setTimeout (function() {
-    btn.classList.remove("flash");
-  },250)
+function btnflash(btn) {
+    btn.classList.add("flash");
+    setTimeout(function () {
+        btn.classList.remove("flash");
+    }, 250);
 }
 
-
-function userflash(btn){
+function userflash(btn) {
     btn.classList.add("userflash");
-    setTimeout (function() {
-      btn.classList.remove("userflash");
-    },250)
-  }
-
-function leveup(){
-    userseq=[];
-    level++;
-    h2.innerHTML=(`level ${level}`);
-
-    //random btn
-
-let randomidx=Math.floor(Math.random()*3);
-let randomcolor=btn[randomidx];
-let randombtn=document.querySelector(`.${randomcolor}`);
-console.log(randombtn);
-console.log(randomcolor);
-console.log(randomidx);
-gameseq.push(randomcolor);
-console.log(gameseq);
-    btnflash(randombtn);
-
+    setTimeout(function () {
+        btn.classList.remove("userflash");
+    }, 250);
 }
 
-function check(idx){
+function levelup() {
+    userseq = [];
+    level++;
+    h2.innerHTML = `level ${level}`;
 
-    if(gameseq[idx]==userseq[idx]){
-        if(gameseq==userseq)
-        { 
-            setTimeout(leveup(),1000);
+    // Random btn
+    let ridx = Math.floor(Math.random() * 4); // Use 4 instead of 3 to include all colors
+    let rcolor = btnColors[ridx];
+    let rbtn = document.querySelector(`.${rcolor}`);
+    gameseq.push(rcolor);
+    console.log(gameseq);
+    btnflash(rbtn);
+}
+
+function check(idx) {
+    if (gameseq[idx] == userseq[idx]) {
+        if(gameseq.length==userseq.length){
+            levelup();
         }
-    }
-    else{
-        h2.innerHTML=`game over press any key to play`;
-        document.querySelector("body").style.backgroundColor="red";
-        setTimeout( function(){
-            document.querySelector("body").style.backgroundColor="white";
-        },150)
+    } else {
+        h2.innerHTML = "game over, press any key to play";
+        document.querySelector("body").style.backgroundColor = "red";
+        setTimeout(function () {
+            document.querySelector("body").style.backgroundColor = "white";
+        }, 150);
         reset();
     }
 }
 
-function btnpress(){
-    let btn=this;
+function btnpress() {
+    let btn = this;
     userflash(btn);
     console.log(this);
-    usercolor=btn.getAttribute("id");
+    usercolor=btn.getAttribute(`id`);
     userseq.push(usercolor);
 
-    check(userseq.length-1);
+    check(userseq.length - 1);
 }
 
-let allbtns=document.querySelectorAll(".btn");
-for(btn of allbtns){
-    btn.addEventListener("click",btnpress);
+let allbtns = document.querySelectorAll(".btn");
+for (btn of allbtns) {
+    btn.addEventListener("click", btnpress);
 }
 
-function reset(){
-    started=false;
-    gameseq=[];
-    userseq=[];
-    level=0;
+function reset() {
+    started = false;
+    gameseq = [];
+    userseq = [];
+    level = 0;
 }
